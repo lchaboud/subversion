@@ -1,0 +1,32 @@
+#!/bin/sh
+ 
+do_start () {
+    svnserve -d -r /var/svn --pid-file /var/run/svnserve.pid
+}
+do_stop () {
+    start-stop-daemon --stop --quiet --pidfile /var/run/svnserve.pid
+}
+ 
+ 
+case "$1" in
+    start)
+        do_start
+        ;;
+    stop)
+        do_stop
+        exit $?
+        ;;
+    restart)
+        do_stop
+        sleep 1s
+        do_start
+        ;;
+    reload|force-reload)
+        echo "Error: argument '$1' not supported" >&2
+        exit 3
+        ;;
+    *)
+        echo "Usage: $0 start|stop|restart" >&2
+        exit 3
+        ;;
+esac
